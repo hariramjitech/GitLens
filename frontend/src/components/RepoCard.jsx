@@ -10,46 +10,50 @@ const RepoCard = ({ repo }) => {
   };
 
   return (
-    <div className="card-premium flex flex-col h-full bg-white group hover:-translate-y-3 transition-all duration-500">
-      <div className="flex justify-between items-start mb-8">
+    <div className="card-premium flex flex-col h-full bg-[#0a0a0a]/50 backdrop-blur-md border border-white/5 group hover:-translate-y-1 hover:bg-[#111111] hover:border-white/10 transition-all duration-500 rounded-3xl p-8 cursor-pointer" onClick={handleVisualise}>
+      <div className="flex justify-between items-start mb-6">
         <div className="flex items-center space-x-3">
-          {repo.private ? (
-            <div className="bg-amber-50 p-2 rounded-xl shadow-inner border border-amber-100/50">
-              <Lock className="w-4 h-4 text-amber-600" />
-            </div>
-          ) : (
-            <div className="bg-emerald-50 p-2 rounded-xl shadow-inner border border-emerald-100/50">
-              <Globe className="w-4 h-4 text-emerald-600" />
-            </div>
-          )}
-          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">
-            {repo.private ? 'Secured' : 'Public Stream'}
+          <div className="bg-white/5 p-2 rounded-xl border border-white/5 group-hover:bg-white/10 transition-colors">
+            {repo.private ? (
+              <Lock className="w-4 h-4 text-white/70" />
+            ) : (
+              <Globe className="w-4 h-4 text-white/70" />
+            )}
+          </div>
+          <span className="text-[10px] font-semibold uppercase tracking-widest text-white/40 group-hover:text-white/70 transition-colors">
+            {repo.private ? 'Private' : 'Public'}
           </span>
         </div>
-        <div className="flex items-center space-x-2 bg-slate-50/80 px-4 py-1.5 rounded-full border border-slate-200/40 skeuo-pressed group-hover:bg-white transition-colors">
-          <Star className="w-3.5 h-3.5 text-amber-400 fill-amber-400" />
-          <span className="text-xs font-black text-slate-600">{repo.stargazers_count}</span>
+        <div className="flex items-center space-x-1.5 bg-white/5 px-3 py-1.5 rounded-full border border-white/5 group-hover:bg-white/10 transition-colors relative">
+          {repo.hasConflict && (
+            <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full border-2 border-black animate-pulse shadow-[0_0_10px_rgba(239,68,68,0.5)]" title="Pending merge conflicts detected" />
+          )}
+          <Star className="w-3.5 h-3.5 text-white/50" />
+          <span className="text-[11px] font-medium text-white/70">{repo.stargazers_count}</span>
         </div>
       </div>
 
-      <h3 className="text-2xl font-black text-slate-900 mb-4 line-clamp-1 group-hover:text-indigo-600 transition-colors tracking-tight">
+      <h3 className="text-xl font-semibold text-white/90 mb-3 line-clamp-1 group-hover:text-white transition-colors tracking-tight">
         {repo.name}
       </h3>
-      
-      <p className="text-slate-500 text-[13px] mb-10 line-clamp-2 flex-grow leading-relaxed font-bold tracking-tight px-1">
-        {repo.description || 'No description provided. A clean codebase waiting for exploration.'}
+
+      <p className="text-white/40 text-[13px] mb-8 line-clamp-2 flex-grow leading-relaxed font-normal tracking-tight">
+        {repo.description || 'No description provided. Click to explore the architecture.'}
       </p>
 
-      <div className="flex items-center justify-between mt-auto pt-8 border-t border-slate-50">
-        <div className="flex items-center space-x-3 text-[10px] font-black uppercase tracking-widest text-slate-300 group-hover:text-slate-500 transition-colors">
-          <Calendar className="w-4 h-4 opacity-50" />
-          <span>Sync {new Date(repo.updated_at).toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' })}</span>
+      <div className="flex items-center justify-between mt-auto pt-6 border-t border-white/5">
+        <div className="flex items-center space-x-2 text-[10px] font-medium tracking-wide text-white/30 group-hover:text-white/50 transition-colors">
+          <Calendar className="w-3.5 h-3.5" />
+          <span>Updated {new Date(repo.updated_at).toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' })}</span>
         </div>
         <button
-          onClick={handleVisualise}
-          className="btn-primary"
+          onClick={(e) => {
+            e.stopPropagation();
+            handleVisualise();
+          }}
+          className="px-5 py-2 bg-white text-black text-xs font-semibold rounded-full hover:bg-gray-200 active:scale-95 transition-all duration-300 shadow-[0_0_15px_rgba(255,255,255,0.1)] group-hover:shadow-[0_0_20px_rgba(255,255,255,0.2)]"
         >
-          Visualise
+          Explore
         </button>
       </div>
     </div>

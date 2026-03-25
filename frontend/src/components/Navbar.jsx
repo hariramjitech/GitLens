@@ -8,37 +8,37 @@ const Navbar = () => {
   const { user, logout } = useAuth();
 
   return (
-    <nav className="h-20 bg-white/80 backdrop-blur-xl border-b border-slate-200/60 sticky top-0 z-50 px-10 flex items-center justify-between shadow-[0_4px_24px_rgba(0,0,0,0.03)]">
-      <Link to="/dashboard" className="flex items-center space-x-4 group">
-        <div className="bg-white p-2.5 rounded-2xl skeuo-raised group-hover:scale-110 transition-all duration-500 shadow-indigo-500/10">
-          <div className="bg-indigo-600 p-2 rounded-xl shadow-inner">
-            <GithubIcon className="w-6 h-6 text-white" />
+    <nav className="h-16 bg-[#000000]/80 backdrop-blur-2xl border-b border-white/5 sticky top-0 z-50 px-8 flex items-center justify-between shadow-2xl">
+      <Link to="/dashboard" className="flex items-center space-x-3 group">
+        <div className="bg-[#0a0a0a] p-2 rounded-xl border border-white/5 group-hover:scale-105 transition-all duration-500 shadow-[0_4px_20px_rgba(255,255,255,0.05)]">
+          <div className="bg-white p-1.5 rounded-lg shadow-inner">
+            <GithubIcon className="w-5 h-5 text-black" />
           </div>
         </div>
-        <h1 className="text-2xl font-black tracking-tight text-slate-900">
-          GitLens<span className="text-indigo-600">Visual</span>
+        <h1 className="text-xl font-semibold tracking-tight text-white">
+          GitLens<span className="text-white/40">Visual</span>
         </h1>
       </Link>
 
       {user && (
-        <div className="flex items-center space-x-8">
-          <div className="flex items-center space-x-4 bg-white/50 backdrop-blur-sm rounded-2xl pl-1.5 pr-5 py-1.5 border border-slate-200 skeuo-raised group cursor-pointer hover:bg-white transition-all">
+        <div className="flex items-center space-x-6">
+          <div className="flex items-center space-x-3 bg-white/5 backdrop-blur-sm rounded-xl pl-1.5 pr-4 py-1.5 border border-white/5 group cursor-default hover:bg-white/10 transition-all">
             <div className="relative">
               <img
                 src={user.avatar_url}
                 alt={user.login}
-                className="w-10 h-10 rounded-xl border-2 border-white shadow-lg group-hover:rotate-3 transition-transform"
+                className="w-7 h-7 rounded-lg border border-white/10 shadow-lg group-hover:scale-105 transition-transform"
               />
-              <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-emerald-500 border-2 border-white rounded-full" />
+              <div className="absolute -bottom-0.5 -right-0.5 w-2 h-2 bg-green-500 border-2 border-black rounded-full" />
             </div>
-            <span className="text-sm font-black text-slate-700 tracking-tight">{user.login}</span>
+            <span className="text-xs font-semibold text-white/80 tracking-tight">{user.login}</span>
           </div>
           <button
             onClick={logout}
-            className="p-3 bg-white border border-slate-100 rounded-2xl text-slate-400 hover:text-red-500 hover:bg-red-50 skeuo-raised active:skeuo-pressed transition-all duration-300"
-            title="Logout"
+            className="p-2.5 bg-transparent border border-white/5 rounded-xl text-white/50 hover:text-red-400 hover:bg-red-500/10 hover:border-red-500/20 active:scale-95 transition-all duration-300"
+            title="Disconnect"
           >
-            <LogOut className="w-5 h-5" />
+            <LogOut className="w-4 h-4" />
           </button>
         </div>
       )}

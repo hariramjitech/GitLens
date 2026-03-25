@@ -2,15 +2,15 @@ import React from 'react';
 
 const LoadingSpinner = ({ fullScreen = false, message = "Synchronizing..." }) => {
   const content = (
-    <div className="flex flex-col items-center justify-center space-y-8 p-12 bg-white rounded-[2.5rem] skeuo-raised border border-slate-100 shadow-2xl">
-      <div className="relative w-20 h-20">
-        <div className="absolute inset-0 rounded-full border-[6px] border-indigo-500/10 border-t-indigo-600 animate-spin shadow-inner"></div>
-        <div className="absolute inset-3 rounded-full border-[6px] border-purple-500/5 border-b-purple-500 animate-[spin_2s_linear_infinite_reverse]"></div>
+    <div className="flex flex-col items-center justify-center space-y-6 p-10 bg-[#0a0a0a] rounded-[2rem] border border-white/5 shadow-2xl backdrop-blur-3xl animate-in zoom-in duration-500">
+      <div className="relative w-16 h-16">
+        <div className="absolute inset-0 rounded-full border-2 border-white/5 border-t-white/40 animate-spin"></div>
+        <div className="absolute inset-2 rounded-full border-2 border-white/5 border-b-white/20 animate-[spin_1.5s_linear_infinite_reverse]"></div>
       </div>
       {message && (
-        <div className="space-y-2 text-center">
-          <p className="text-slate-900 font-black text-lg tracking-tight animate-pulse font-outfit">{message}</p>
-          <p className="text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em]">Please Wait</p>
+        <div className="space-y-1 text-center">
+          <p className="text-white/80 font-semibold text-sm tracking-tight animate-pulse">{message}</p>
+          <p className="text-[9px] text-white/20 font-semibold uppercase tracking-[0.2em]">System Active</p>
         </div>
       )}
     </div>
@@ -18,7 +18,7 @@ const LoadingSpinner = ({ fullScreen = false, message = "Synchronizing..." }) =>
 
   if (fullScreen) {
     return (
-      <div className="fixed inset-0 bg-slate-50/80 backdrop-blur-md flex items-center justify-center z-[100] p-10">
+      <div className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-[100] p-10">
         {content}
       </div>
     );
