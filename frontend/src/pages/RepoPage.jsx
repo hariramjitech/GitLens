@@ -20,8 +20,10 @@ import {
 const RepoPage = () => {
   const { owner, repo } = useParams();
   const navigate = useNavigate();
-  const { fetchLanguages, fetchCollaborators, fetchBranches, compareBranches, mergeBranches, createBranch, inviteCollaborator } = useGitHub();
+  const { fetchRepoDetails, fetchCommits, fetchLanguages, fetchCollaborators, fetchBranches, compareBranches, mergeBranches, createBranch, inviteCollaborator } = useGitHub();
   const [selectedCommit, setSelectedCommit] = useState(null);
+  const [repoDetails, setRepoDetails] = useState(null);
+  const [commits, setCommits] = useState([]);
   const [languages, setLanguages] = useState({});
   const [collaborators, setCollaborators] = useState([]);
   const [branches, setBranches] = useState([]);
@@ -34,20 +36,37 @@ const RepoPage = () => {
   useEffect(() => {
     const loadData = async () => {
       try {
-        const [langData, collData, branchData] = await Promise.all([
+        const [details, langData, collData, branchData, commitData] = await Promise.all([
+          fetchRepoDetails(owner, repo),
           fetchLanguages(owner, repo),
           fetchCollaborators(owner, repo),
-          fetchBranches(owner, repo)
+          fetchBranches(owner, repo),
+          fetchCommits(owner, repo)
         ]);
+        setRepoDetails(details);
         setLanguages(langData || {});
         setCollaborators(collData || []);
         setBranches(branchData || []);
+        setCommits(commitData || []);
       } catch (err) {
         console.error("Error loading repo data:", err);
       }
     };
     loadData();
-  }, [owner, repo, fetchLanguages, fetchCollaborators, fetchBranches]);
+  }, [owner, repo, fetchRepoDetails, fetchLanguages, fetchCollaborators, fetchBranches, fetchCommits]);
+
+  const contributorStats = React.useMemo(() => {
+    const contribs = {};
+    commits.forEach(commit => {
+      const login = commit.author?.login || commit.commit.author.name;
+      const avatar = commit.author?.avatar_url;
+      if (!contribs[login]) {
+        contribs[login] = { login, avatar, count: 0 };
+      }
+      contribs[login].count++;
+    });
+    return Object.values(contribs).sort((a, b) => b.count - a.count);
+  }, [commits]);
 
   const totalLines = Object.values(languages).reduce((a, b) => a + b, 0) || 1;
 
@@ -147,6 +166,45 @@ const RepoPage = () => {
             {/* Spacious Sidebar */}
             <aside className="w-[280px] border-r border-zinc-900 bg-black flex flex-col shrink-0">
               <div className="flex-1 overflow-y-auto custom-scrollbar p-6 space-y-8">
+                {/* About Section */}
+                <div className="space-y-4">
+                   <div className="flex items-center justify-between">
+                      <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">About</span>
+                      <Info className="w-3.5 h-3.5 text-zinc-600" />
+                   </div>
+                   <div className="space-y-4">
+                      {repoDetails?.description && (
+                        <p className="text-xs text-zinc-400 leading-relaxed font-medium line-clamp-3">
+                          {repoDetails.description}
+                        </p>
+                      )}
+                      {repoDetails?.homepage && (
+                        <div className="flex items-center space-x-2 text-blue-400 hover:text-blue-300 transition-colors cursor-pointer group">
+                          <ArrowUpRight className="w-3.5 h-3.5" />
+                          <span className="text-[11px] font-bold truncate underline decoration-blue-500/30 underline-offset-4">{new URL(repoDetails.homepage).hostname}</span>
+                        </div>
+                      )}
+                      <div className="grid grid-cols-4 gap-2 py-2 border-y border-zinc-900/50">
+                        <div className="text-center">
+                          <div className="text-[11px] font-bold text-zinc-200">{repoDetails?.stargazers_count || 0}</div>
+                          <div className="text-[9px] font-bold text-zinc-600 uppercase">Stars</div>
+                        </div>
+                        <div className="text-center border-x border-zinc-900/50">
+                          <div className="text-[11px] font-bold text-zinc-200">{repoDetails?.subscribers_count || 0}</div>
+                          <div className="text-[9px] font-bold text-zinc-600 uppercase">Watch</div>
+                        </div>
+                        <div className="text-center border-r border-zinc-900/50">
+                          <div className="text-[11px] font-bold text-zinc-200">{repoDetails?.forks_count || 0}</div>
+                          <div className="text-[9px] font-bold text-zinc-600 uppercase">Forks</div>
+                        </div>
+                        <div className="text-center">
+                          <div className="text-[11px] font-bold text-emerald-500">{commits.length}</div>
+                          <div className="text-[9px] font-bold text-zinc-600 uppercase">Commits</div>
+                        </div>
+                      </div>
+                   </div>
+                </div>
+
                 {/* Project Intelligence */}
                 <div className="space-y-4">
                    <div className="flex items-center justify-between">
@@ -170,7 +228,7 @@ const RepoPage = () => {
                                <div key={name} className="flex items-center justify-between px-2.5 py-1.5 bg-zinc-900/30 border border-zinc-900 rounded-lg">
                                   <span className="text-[10px] font-medium text-zinc-500 truncate mr-2">{name}</span>
                                   <span className="text-[10px] font-bold text-zinc-400">{Math.round((lines/totalLines)*100)}%</span>
-                               </div>
+                                </div>
                             ))}
                          </div>
                       </div>
@@ -184,7 +242,7 @@ const RepoPage = () => {
                       <GitBranch className="w-3.5 h-3.5 text-zinc-600" />
                    </div>
                    <div className="space-y-1">
-                      {branches.slice(0, 5).map(b => (
+                      {branches.slice(0, 3).map(b => (
                          <div key={b.name} className="flex items-center justify-between p-2 rounded-lg hover:bg-zinc-900 transition-colors group cursor-pointer">
                             <div className="flex items-center space-x-2.5">
                                <div className="w-1 h-1 rounded-full bg-zinc-700 group-hover:bg-zinc-400 transition-colors" />
@@ -193,25 +251,41 @@ const RepoPage = () => {
                             <ArrowUpRight className="w-3 h-3 text-zinc-700 group-hover:text-zinc-500" />
                          </div>
                       ))}
-                      <button onClick={() => setIsBranchOpen(true)} className="w-full mt-2 py-2 border border-dashed border-zinc-800 rounded-lg text-[10px] font-bold uppercase tracking-wider text-zinc-600 hover:text-zinc-400 hover:border-zinc-700 transition-all flex items-center justify-center space-x-2">
+                      <button onClick={() => setIsBranchOpen(true)} className="w-full mt-1.5 py-1.5 border border-dashed border-zinc-900 rounded-lg text-[10px] font-bold uppercase tracking-wider text-zinc-700 hover:text-zinc-500 hover:border-zinc-800 transition-all flex items-center justify-center space-x-2">
                          <Plus className="w-3 h-3" />
-                         <span>Forge New Stream</span>
+                         <span>Forge Stream</span>
                       </button>
                    </div>
                 </div>
 
-                {/* Core Contributors */}
-                <div className="space-y-4">
+                {/* Core Contributors with Counts */}
+                <div className="space-y-4 pb-4">
                    <div className="flex items-center justify-between">
-                      <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Contributors</span>
+                      <div className="flex items-center space-x-2">
+                        <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Contributors</span>
+                        <span className="px-1.5 py-0.5 rounded-md bg-zinc-900 text-[10px] font-bold text-zinc-600">{contributorStats.length}</span>
+                      </div>
                       <Users className="w-3.5 h-3.5 text-zinc-600" />
                    </div>
-                   <div className="flex flex-wrap gap-2">
-                      {collaborators.slice(0, 6).map(c => (
-                         <img key={c.id} src={c.avatar_url} className="w-8 h-8 rounded-lg border border-zinc-900 grayscale hover:grayscale-0 transition-all hover:scale-105 cursor-help" title={c.login} alt={c.login} />
+                   <div className="space-y-2">
+                      {contributorStats.slice(0, 5).map((c, i) => (
+                         <div key={c.login} className="flex items-center justify-between p-2 bg-zinc-900/20 border border-zinc-900/50 rounded-xl hover:bg-zinc-900/40 transition-colors group">
+                            <div className="flex items-center space-x-3">
+                               <img src={c.avatar} className="w-7 h-7 rounded-lg border border-zinc-800 transition-all grayscale group-hover:grayscale-0" alt={c.login} />
+                               <div className="flex flex-col">
+                                  <span className="text-[11px] font-bold text-zinc-400 group-hover:text-zinc-200 truncate max-w-[100px]">{c.login}</span>
+                                  <span className="text-[9px] font-bold text-zinc-700 uppercase">{i === 0 ? 'Lead' : 'Core'}</span>
+                               </div>
+                            </div>
+                            <div className="text-right">
+                               <span className="text-xs font-bold text-zinc-500 group-hover:text-emerald-500 transition-colors">{c.count}</span>
+                               <span className="text-[8px] font-bold text-zinc-700 block -mt-1 uppercase">Commits</span>
+                            </div>
+                         </div>
                       ))}
-                      <button onClick={() => setIsCollabOpen(true)} className="w-8 h-8 flex items-center justify-center rounded-lg bg-zinc-900 border border-zinc-800 text-zinc-600 hover:text-zinc-400 transition-colors">
-                         <Plus className="w-3.5 h-3.5" />
+                      <button onClick={() => setIsCollabOpen(true)} className="w-full mt-1 py-1.5 hover:bg-zinc-900 rounded-lg text-[10px] font-bold uppercase tracking-wider text-zinc-700 hover:text-zinc-400 transition-all flex items-center justify-center space-x-2 border border-zinc-900">
+                         <Plus className="w-3 h-3" />
+                         <span>Add Partner</span>
                       </button>
                    </div>
                 </div>
@@ -244,6 +318,7 @@ const RepoPage = () => {
                     <HeatmapView 
                       owner={owner} 
                       repo={repo} 
+                      commits={commits}
                     />
                   )}
                </div>

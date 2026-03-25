@@ -19,6 +19,20 @@ export const useGitHub = () => {
     }
   }, []);
 
+  const fetchRepoDetails = useCallback(async (owner, repo) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const { data } = await api.get(`/github/repos/${owner}/${repo}`);
+      return data;
+    } catch (err) {
+      setError(err.response?.data?.error || 'Failed to fetch repository details');
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
   const fetchBranches = useCallback(async (owner, repo) => {
     setLoading(true);
     setError(null);
@@ -38,7 +52,7 @@ export const useGitHub = () => {
     setError(null);
     try {
       const { data } = await api.get(`/github/repos/${owner}/${repo}/commits`, {
-        params: { sha: branch, per_page: 50 }
+        params: { sha: branch, per_page: 100 }
       });
       return data;
     } catch (err) {
@@ -287,6 +301,7 @@ export const useGitHub = () => {
     loading,
     error,
     fetchRepos,
+    fetchRepoDetails,
     fetchBranches,
     fetchCommits,
     fetchCommitDetail,

@@ -34,6 +34,22 @@ router.get("/user", async (req, res) => {
   }
 });
 
+// GET /api/github/repos/:owner/:repo — get repository metadata
+router.get("/repos/:owner/:repo", async (req, res) => {
+  const { owner, repo } = req.params;
+  try {
+    const response = await axios.get(
+      `${GITHUB_API}/repos/${owner}/${repo}`,
+      githubHeaders(req.token)
+    );
+    res.json(response.data);
+  } catch (error) {
+    res.status(error.response?.status || 500).json({
+      error: error.response?.data?.message || "Failed to fetch repository metadata",
+    });
+  }
+});
+
 // GET /api/github/repos — list authenticated user's repos
 router.get("/repos", async (req, res) => {
   const { sort = "updated", per_page = 30, page = 1 } = req.query;

@@ -45,10 +45,10 @@ export default {
           purple: '#7c3aed',
           emerald: '#059669',
         }
-      }
       },
       gridTemplateColumns: {
         '26': 'repeat(26, minmax(0, 1fr))',
+        '53': 'repeat(53, minmax(0, 1fr))',
       },
     },
   },
