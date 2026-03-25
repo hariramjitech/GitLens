@@ -297,4 +297,45 @@ router.get("/repos/:owner/:repo/contents/*", async (req, res) => {
   }
 });
 
+// PUT /api/github/repos/:owner/:repo/contents/* — create or update file content
+router.put("/repos/:owner/:repo/contents/*", async (req, res) => {
+  const { owner, repo } = req.params;
+  const path = req.params[0] || "";
+  const { content, message, sha, branch } = req.body;
+  try {
+    const response = await axios.put(
+      `${GITHUB_API}/repos/${owner}/${repo}/contents/${path}`,
+      { content, message, sha, branch },
+      githubHeaders(req.token)
+    );
+    res.json(response.data);
+  } catch (error) {
+    res.status(error.response?.status || 500).json({
+      error: error.response?.data?.message || "Failed to update file contents",
+    });
+  }
+});
+
+// GET /api/github/repos/:owner/:repo/commits/:sha/diff — get raw commit diff
+router.get("/repos/:owner/:repo/commits/:sha/diff", async (req, res) => {
+  const { owner, repo, sha } = req.params;
+  try {
+    const response = await axios.get(
+      `${GITHUB_API}/repos/${owner}/${repo}/commits/${sha}`,
+      {
+        ...githubHeaders(req.token),
+        headers: {
+          ...githubHeaders(req.token).headers,
+          Accept: "application/vnd.github.v3.diff",
+        },
+      }
+    );
+    res.send(response.data);
+  } catch (error) {
+    res.status(error.response?.status || 500).json({
+      error: error.response?.data?.message || "Failed to fetch commit diff",
+    });
+  }
+});
+
 export default router;

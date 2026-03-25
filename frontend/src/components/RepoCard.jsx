@@ -1,8 +1,8 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Star, GitFork, Eye, Calendar, Lock, Globe } from 'lucide-react';
+import { Star, GitFork, Eye, Calendar, Lock, Globe, Users, ShieldAlert, Sparkles, UserCircle } from 'lucide-react';
 
-const RepoCard = ({ repo }) => {
+const RepoCard = ({ repo, currentUser }) => {
   const navigate = useNavigate();
 
   const handleVisualise = () => {
@@ -23,6 +23,23 @@ const RepoCard = ({ repo }) => {
           <span className="text-[10px] font-semibold uppercase tracking-widest text-white/40 group-hover:text-white/70 transition-colors">
             {repo.private ? 'Private' : 'Public'}
           </span>
+          <div className="h-3 w-px bg-white/10" />
+          {repo.fork ? (
+            <div className="flex items-center space-x-1.5 px-2 py-0.5 rounded border border-purple-500/20 bg-purple-500/10 text-purple-400">
+               <GitFork className="w-3 h-3" />
+               <span className="text-[9px] font-bold uppercase tracking-wider">Forked</span>
+            </div>
+          ) : repo.owner?.login === currentUser?.login ? (
+            <div className="flex items-center space-x-1.5 px-2 py-0.5 rounded border border-emerald-500/20 bg-emerald-500/10 text-emerald-400">
+               <UserCircle className="w-3 h-3" />
+               <span className="text-[9px] font-bold uppercase tracking-wider">Owner</span>
+            </div>
+          ) : (
+            <div className="flex items-center space-x-1.5 px-2 py-0.5 rounded border border-blue-500/20 bg-blue-500/10 text-blue-400">
+               <Users className="w-3 h-3" />
+               <span className="text-[9px] font-bold uppercase tracking-wider">Collab</span>
+            </div>
+          )}
         </div>
         <div className="flex items-center space-x-1.5 bg-white/5 px-3 py-1.5 rounded-full border border-white/5 group-hover:bg-white/10 transition-colors relative">
           {repo.hasConflict && (

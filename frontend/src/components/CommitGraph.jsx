@@ -152,7 +152,6 @@ const CommitGraphContent = ({ owner, repo, onSelectCommit }) => {
             colorMode="dark"
             panOnScroll={true}
             zoomOnScroll={true}
-            zoomActivationKey="Alt"
             zoomOnPinch={true}
             panOnDrag={true}
             selectionOnDrag={false}

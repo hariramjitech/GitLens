@@ -46,6 +46,10 @@ export default {
           emerald: '#059669',
         }
       }
+      },
+      gridTemplateColumns: {
+        '26': 'repeat(26, minmax(0, 1fr))',
+      },
     },
   },
   plugins: [],

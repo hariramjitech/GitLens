@@ -6,10 +6,15 @@
 
 :root {
   --bg-main: #000000;
-  --bg-sidebar: #050505;
+  --bg-sidebar: #020202;
   --bg-card: #09090b;
-  --border-subtle: rgba(255, 255, 255, 0.05);
-  --border-strong: rgba(255, 255, 255, 0.1);
+  --bg-accent: #0f172a;
+  --border-subtle: rgba(255, 255, 255, 0.03);
+  --border-strong: rgba(255, 255, 255, 0.08);
+  --glass-bg: rgba(9, 9, 11, 0.4);
+  --glass-border: rgba(255, 255, 255, 0.05);
+  --glow-emerald: 0 0 20px rgba(16, 185, 129, 0.1);
+  --glow-zinc: 0 0 20px rgba(255, 255, 255, 0.03);
   --zinc-50: #fafafa;
   --zinc-100: #f4f4f5;
   --zinc-200: #e4e4e7;
@@ -47,11 +52,15 @@ body {
 
 @layer components {
   .glass {
-    @apply backdrop-blur-xl border border-white/5 bg-black/40;
+    @apply backdrop-blur-2xl border border-white/5 bg-black/40;
   }
 
   .glass-card {
-    @apply backdrop-blur-xl border border-white/5 bg-zinc-950/50 rounded-xl transition-all duration-300;
+    @apply backdrop-blur-2xl border border-white/5 bg-zinc-950/40 rounded-xl transition-all duration-500 hover:bg-zinc-950/60 hover:border-white/10;
+  }
+
+  .glass-panel {
+    @apply backdrop-blur-3xl border-l border-white/5 bg-black/60;
   }
 
   .btn-primary {

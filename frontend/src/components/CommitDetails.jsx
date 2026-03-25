@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useGitHub } from "../hooks/useGitHub";
-import { User, Calendar, PlusCircle, MinusCircle, FileCode, ChevronRight, Hash } from "lucide-react";
+import { User, Calendar, PlusCircle, MinusCircle, FileCode, ChevronRight, Hash, Sparkles, Brain, ShieldCheck, Zap } from "lucide-react";
+import ReactMarkdown from 'react-markdown';
 import LoadingSpinner from "./LoadingSpinner";
 
 export default function CommitDetails({ repo, commitSha }) {
   const [details, setDetails] = useState(null);
-  const { fetchCommitDetail, loading, error } = useGitHub();
+  const [explanation, setExplanation] = useState("");
+  const [explaining, setExplaining] = useState(false);
+  const { fetchCommitDetail, fetchCommitDiff, fetchCommitExplanation, loading, error } = useGitHub();
 
   useEffect(() => {
     if (!repo || !commitSha) return;
@@ -15,6 +18,7 @@ export default function CommitDetails({ repo, commitSha }) {
         const [owner, name] = repo.full_name.split("/");
         const data = await fetchCommitDetail(owner, name, commitSha);
         setDetails(data);
+        setExplanation(""); // Reset explanation when commit changes
       } catch (err) {
         console.error(err);
       }
@@ -22,6 +26,21 @@ export default function CommitDetails({ repo, commitSha }) {
 
     loadDetails();
   }, [repo, commitSha, fetchCommitDetail]);
+
+  const handleAIExplain = async () => {
+    if (!repo || !commitSha || explaining) return;
+    setExplaining(true);
+    try {
+      const [owner, name] = repo.full_name.split("/");
+      const diff = await fetchCommitDiff(owner, name, commitSha);
+      const aiResponse = await fetchCommitExplanation(diff, details.commit.message);
+      setExplanation(aiResponse);
+    } catch (err) {
+      console.error("AI Explanation failed:", err);
+    } finally {
+      setExplaining(false);
+    }
+  };
 
   if (loading) return <div className="h-full flex items-center justify-center"><div className="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-white/20"></div></div>;
   if (error) return <div className="p-8 text-center text-red-400 bg-red-500/5 rounded-3xl border border-red-500/10 m-6">{error}</div>;
@@ -87,6 +106,43 @@ export default function CommitDetails({ repo, commitSha }) {
             {files.length} Modified Streams
           </div>
         </div>
+
+        {/* AI Insight Button */}
+        {!explanation ? (
+          <button 
+            onClick={handleAIExplain}
+            disabled={explaining}
+            className="w-full relative group overflow-hidden bg-zinc-100 hover:bg-white text-zinc-950 px-4 py-3 rounded-xl transition-all duration-300 active:scale-[0.98] disabled:opacity-50"
+          >
+            <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/20 to-blue-500/20 opacity-0 group-hover:opacity-100 transition-opacity" />
+            <div className="flex items-center justify-center space-x-2 relative z-10">
+              {explaining ? (
+                <>
+                  <Sparkles className="w-4 h-4 animate-pulse text-emerald-600" />
+                  <span className="text-xs font-bold uppercase tracking-wider">Consulting Neural Core...</span>
+                </>
+              ) : (
+                <>
+                  <Brain className="w-4 h-4 text-zinc-800" />
+                  <span className="text-xs font-bold uppercase tracking-wider">Explain with AI Intelligence</span>
+                </>
+              )}
+            </div>
+          </button>
+        ) : (
+          <div className="bg-zinc-950/80 border border-zinc-800/50 rounded-xl p-5 space-y-4 animate-in fade-in slide-in-from-top-2 duration-500">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2 text-emerald-400">
+                <ShieldCheck className="w-4 h-4" />
+                <span className="text-[10px] font-bold uppercase tracking-widest">Intelligence Report</span>
+              </div>
+              <Zap className="w-3.5 h-3.5 text-zinc-600" />
+            </div>
+            <div className="prose prose-invert prose-xs max-w-none text-zinc-300 leading-relaxed text-[13px] AI-Explanation-Container">
+               <ReactMarkdown>{explanation}</ReactMarkdown>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Diffs List */}

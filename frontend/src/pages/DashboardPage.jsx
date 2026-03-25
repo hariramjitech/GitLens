@@ -8,7 +8,7 @@ import LoadingSpinner from '../components/LoadingSpinner';
 import { Search, SlidersHorizontal, Sparkles } from 'lucide-react';
 
 const DashboardPage = () => {
-  const { login } = useAuth();
+  const { login, user } = useAuth();
   const { fetchRepos, loading, error } = useGitHub();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
@@ -100,7 +100,7 @@ const DashboardPage = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 relative z-10">
             {filteredRepos.length > 0 ? (
               filteredRepos.map(repo => (
-                <RepoCard key={repo.id} repo={repo} />
+                <RepoCard key={repo.id} repo={repo} currentUser={user} />
               ))
             ) : (
               <div className="col-span-full py-32 text-center glass-panel rounded-3xl mt-10">

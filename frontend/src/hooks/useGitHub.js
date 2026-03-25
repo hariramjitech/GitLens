@@ -151,6 +151,138 @@ export const useGitHub = () => {
     }
   }, []);
 
+  const fetchPullRequests = useCallback(async (owner, repo, state = 'all') => {
+    setLoading(true);
+    setError(null);
+    try {
+      const { data } = await api.get(`/github/repos/${owner}/${repo}/pulls`, { params: { state } });
+      return data;
+    } catch (err) {
+      setError(err.response?.data?.error || 'Failed to fetch pull requests');
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  const fetchPullRequestDetails = useCallback(async (owner, repo, prNumber) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const { data } = await api.get(`/github/repos/${owner}/${repo}/pulls/${prNumber}`);
+      return data;
+    } catch (err) {
+      setError(err.response?.data?.error || 'Failed to fetch pull request details');
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  const createPullRequest = useCallback(async (owner, repo, title, head, base, body) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const { data } = await api.post(`/github/repos/${owner}/${repo}/pulls`, {
+        title, head, base, body
+      });
+      return data;
+    } catch (err) {
+      setError(err.response?.data?.error || 'Failed to create pull request');
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  const submitPullRequestReview = useCallback(async (owner, repo, prNumber, body, event, comments) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const { data } = await api.post(`/github/repos/${owner}/${repo}/pulls/${prNumber}/reviews`, {
+        body, event, comments
+      });
+      return data;
+    } catch (err) {
+      setError(err.response?.data?.error || 'Failed to submit review');
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  const fetchRepoContents = useCallback(async (owner, repo, path = '') => {
+    setLoading(true);
+    setError(null);
+    try {
+      const { data } = await api.get(`/github/repos/${owner}/${repo}/contents/${path}`);
+      return data;
+    } catch (err) {
+      setError(err.response?.data?.error || 'Failed to fetch repo contents');
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  const updateFileContent = useCallback(async (owner, repo, path, content, message, sha, branch) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const { data } = await api.put(`/github/repos/${owner}/${repo}/contents/${path}`, {
+        content, message, sha, branch
+      });
+      return data;
+    } catch (err) {
+      setError(err.response?.data?.error || 'Failed to update file content');
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  const fetchCommitDiff = useCallback(async (owner, repo, sha) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const { data } = await api.get(`/github/repos/${owner}/${repo}/commits/${sha}/diff`);
+      return data;
+    } catch (err) {
+      setError(err.response?.data?.error || 'Failed to fetch commit diff');
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  const fetchCommitExplanation = useCallback(async (diff, message) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const { data } = await api.post('/ai/explain-commit', { diff, message });
+      return data.explanation;
+    } catch (err) {
+      setError(err.response?.data?.error || 'Failed to fetch AI explanation');
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  const suggestCommitMessages = useCallback(async (diff) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const { data } = await api.post('/ai/suggest-message', { diff });
+      return data.suggestions;
+    } catch (err) {
+      setError(err.response?.data?.error || 'Failed to fetch suggestions');
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
   return {
     loading,
     error,
@@ -163,6 +295,15 @@ export const useGitHub = () => {
     compareBranches,
     mergeBranches,
     createBranch,
-    inviteCollaborator
+    inviteCollaborator,
+    fetchPullRequests,
+    fetchPullRequestDetails,
+    createPullRequest,
+    submitPullRequestReview,
+    fetchRepoContents,
+    updateFileContent,
+    fetchCommitDiff,
+    fetchCommitExplanation,
+    suggestCommitMessages
   };
 };
