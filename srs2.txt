@@ -1,0 +1,212 @@
+2GitLens Visual – Software Requirements Specification (SRS) V2
+
+Project Name: GitLens Visual
+Version: 2.0
+Date: March 25, 2026
+Prepared By: Hari
+
+1. 📌 Introduction
+1.1 Purpose
+
+This document defines the functional and non-functional requirements for Version 2 of GitLens Visual, a web-based interactive Git visualization and management platform.
+
+1.2 Scope
+
+GitLens Visual aims to:
+
+Simplify Git repository understanding through visualization
+Enable users to manage repositories (branches, commits, PRs)
+Provide AI-powered insights and analytics
+Deliver a modern alternative to traditional Git interfaces
+2. 🎯 Objectives
+Provide real-time Git activity visualization
+Enable full repository management (including PRs)
+Enhance developer productivity using AI insights
+Improve collaboration via interactive tools
+Ensure high performance, security, and scalability
+3. 👤 User Classes
+User Type	Description
+Beginner Developer	Needs simplified Git understanding
+Intermediate Developer	Uses visualization for debugging
+Advanced Developer	Uses full Git management features
+Team Collaborator	Works on shared repositories
+4. 🧩 System Overview
+4.1 System Architecture
+Frontend: React + Vite
+Backend: Node.js + Express
+Communication: REST APIs + WebSockets
+External APIs: GitHub REST API, Webhooks
+Optional AI Layer: LLM API integration
+5. 🚀 Functional Requirements
+5.1 Authentication & User Management
+FR-1: OAuth Login
+Users shall authenticate via GitHub OAuth 2.0
+System shall securely store access tokens
+FR-2: Session Management
+Tokens shall be stored using HTTP-only cookies
+Sessions shall auto-expire and refresh securely
+5.2 Repository Management
+FR-3: Repository Listing
+Display all repositories (owned + collaborated)
+Show metadata:
+Name
+Visibility
+Last updated
+FR-4: Repository Explorer (Enhanced)
+Users shall:
+Open repository details
+View branches, contributors, languages
+5.3 Commit Visualization
+FR-5: Interactive Commit Graph
+Display commits as nodes
+Show parent-child relationships
+Support:
+Zoom
+Pan
+Center on HEAD
+FR-6: Graph Filtering
+Filter commits by:
+Author
+Date
+Branch
+5.4 Commit Operations (NEW)
+FR-7: Commit Creation
+Users shall:
+Edit files
+Create commits
+FR-8: Commit Actions
+Users shall:
+Revert commits
+Cherry-pick commits
+Amend commits
+5.5 Pull Request Management (NEW - CRITICAL)
+FR-9: Create Pull Request
+Select source and target branch
+Add title and description
+FR-10: View Pull Requests
+Display:
+Status (open/closed/merged)
+Author
+Timeline
+FR-11: Review Pull Requests
+Users shall:
+Comment on PR
+Approve / request changes
+View diffs
+5.6 Branch Management (Enhanced)
+FR-12: Branch Operations
+Create branch
+Delete branch
+Switch branch
+5.7 Merge Engine (Enhanced)
+FR-13: Merge Branches
+Compare branches before merge
+Detect conflicts
+FR-14: Conflict Handling
+Show conflict UI
+Suggest resolutions (future AI)
+5.8 File Explorer (NEW)
+FR-15: Repository File Viewer
+Browse repository structure
+View file contents
+FR-16: Syntax Highlighting
+Support major programming languages
+5.9 Real-Time Updates (NEW)
+FR-17: Live Updates
+Reflect:
+New commits
+PR updates
+Branch changes
+FR-18: Notifications
+Show alerts for:
+PR opened
+Commit pushed
+Merge completed
+5.10 AI Features (NEW – DIFFERENTIATOR)
+FR-19: Commit Explanation
+AI explains commit purpose
+FR-20: Repository Summary
+AI generates:
+Project overview
+Weekly summaries
+FR-21: Risk Detection
+Identify:
+Large changes
+Potential bugs
+5.11 Analytics Dashboard (NEW)
+FR-22: Contributor Insights
+Show:
+Top contributors
+Commit frequency
+FR-23: Code Statistics
+Display:
+Language usage
+Activity trends
+5.12 Git City (Enhanced)
+FR-24: 3D Visualization Improvements
+Buildings represent repositories
+Height = commit count
+Color = language
+5.13 Collaboration Features
+FR-25: Collaborator Management
+Invite collaborators
+View contributors
+6. ⚙️ Non-Functional Requirements
+6.1 Performance
+Repo load time ≤ 3 seconds
+Graph rendering ≤ 2 seconds
+6.2 Scalability
+Backend shall be stateless
+Deployable on serverless platforms
+6.3 Security
+Use OAuth tokens securely
+No sensitive data stored locally
+Use HTTPS for all requests
+6.4 Usability
+Intuitive UI for beginners
+Advanced controls for experts
+6.5 Reliability
+System uptime ≥ 99%
+Graceful error handling
+6.6 Maintainability
+Modular code architecture
+Clean API design
+7. 🧪 System Constraints
+Dependent on GitHub API rate limits
+Requires internet connectivity
+OAuth scopes must be approved by GitHub
+8. 🔮 Future Enhancements (V3)
+Multi-platform support (GitLab, Bitbucket)
+Desktop application (Electron/Tauri)
+AI merge conflict resolution
+Offline mode
+Plugin ecosystem
+9. 🛠️ Technology Stack
+Frontend:
+React, Vite
+Tailwind CSS
+React Flow
+Three.js
+Backend:
+Node.js
+Express
+Integrations:
+GitHub REST API
+WebSockets
+AI API (optional)
+10. 📊 Success Metrics
+User engagement (time spent per repo)
+Number of actions performed (commits, merges)
+Performance benchmarks
+Error rate < 2%
+🏁 Conclusion
+
+Version 2 transforms GitLens Visual from:
+
+A visualization tool → A full-fledged Git management platform
+
+with:
+
+Real-time collaboration
+AI-powered intelligence
+Full Git workflow support
