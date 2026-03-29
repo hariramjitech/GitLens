@@ -1,11 +1,11 @@
-2GitLens Visual – Software Requirements Specification (SRS) V2
+2GitLens Visual â Software Requirements Specification (SRS) V2
 
 Project Name: GitLens Visual
 Version: 2.0
 Date: March 25, 2026
 Prepared By: Hari
 
-1. 📌 Introduction
+1. ð Introduction
 1.1 Purpose
 
 This document defines the functional and non-functional requirements for Version 2 of GitLens Visual, a web-based interactive Git visualization and management platform.
@@ -18,26 +18,26 @@ Simplify Git repository understanding through visualization
 Enable users to manage repositories (branches, commits, PRs)
 Provide AI-powered insights and analytics
 Deliver a modern alternative to traditional Git interfaces
-2. 🎯 Objectives
+2. ð¯ Objectives
 Provide real-time Git activity visualization
 Enable full repository management (including PRs)
 Enhance developer productivity using AI insights
 Improve collaboration via interactive tools
 Ensure high performance, security, and scalability
-3. 👤 User Classes
+3. ð¤ User Classes
 User Type	Description
 Beginner Developer	Needs simplified Git understanding
 Intermediate Developer	Uses visualization for debugging
 Advanced Developer	Uses full Git management features
 Team Collaborator	Works on shared repositories
-4. 🧩 System Overview
+4. ð§© System Overview
 4.1 System Architecture
 Frontend: React + Vite
 Backend: Node.js + Express
 Communication: REST APIs + WebSockets
 External APIs: GitHub REST API, Webhooks
 Optional AI Layer: LLM API integration
-5. 🚀 Functional Requirements
+5. ð Functional Requirements
 5.1 Authentication & User Management
 FR-1: OAuth Login
 Users shall authenticate via GitHub OAuth 2.0
@@ -122,7 +122,7 @@ Show alerts for:
 PR opened
 Commit pushed
 Merge completed
-5.10 AI Features (NEW – DIFFERENTIATOR)
+5.10 AI Features (NEW â DIFFERENTIATOR)
 FR-19: Commit Explanation
 AI explains commit purpose
 FR-20: Repository Summary
@@ -151,10 +151,10 @@ Color = language
 FR-25: Collaborator Management
 Invite collaborators
 View contributors
-6. ⚙️ Non-Functional Requirements
+6. âï¸ Non-Functional Requirements
 6.1 Performance
-Repo load time ≤ 3 seconds
-Graph rendering ≤ 2 seconds
+Repo load time â¤ 3 seconds
+Graph rendering â¤ 2 seconds
 6.2 Scalability
 Backend shall be stateless
 Deployable on serverless platforms
@@ -166,22 +166,22 @@ Use HTTPS for all requests
 Intuitive UI for beginners
 Advanced controls for experts
 6.5 Reliability
-System uptime ≥ 99%
+System uptime â¥ 99%
 Graceful error handling
 6.6 Maintainability
 Modular code architecture
 Clean API design
-7. 🧪 System Constraints
+7. ð§ª System Constraints
 Dependent on GitHub API rate limits
 Requires internet connectivity
 OAuth scopes must be approved by GitHub
-8. 🔮 Future Enhancements (V3)
+8. ð® Future Enhancements (V3)
 Multi-platform support (GitLab, Bitbucket)
 Desktop application (Electron/Tauri)
 AI merge conflict resolution
 Offline mode
 Plugin ecosystem
-9. 🛠️ Technology Stack
+9. ð ï¸ Technology Stack
 Frontend:
 React, Vite
 Tailwind CSS
@@ -194,19 +194,19 @@ Integrations:
 GitHub REST API
 WebSockets
 AI API (optional)
-10. 📊 Success Metrics
+10. ð Success Metrics
 User engagement (time spent per repo)
 Number of actions performed (commits, merges)
 Performance benchmarks
 Error rate < 2%
-🏁 Conclusion
+ð Conclusion
 
 Version 2 transforms GitLens Visual from:
 
-A visualization tool → A full-fledged Git management platform
+A visualization tool â A full-fledged Git management platform
 
 with:
-
+test
 Real-time collaboration
 AI-powered intelligence
 Full Git workflow support
